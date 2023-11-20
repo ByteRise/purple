@@ -1,6 +1,6 @@
 # PurplePipManager
 
-PurplePipManager is a C++ program that manages Python virtual environments and packages. 
+PurplePipManager is a C++ program that manages Python packages. 
 
 ## Usage
 
