@@ -39,20 +39,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (!venvPath && strcmp(command, "list") != 0) {
-        std::cerr << "Error: Virtual environment path not specified.\n" << usage;
-        return 1;
-    }
-
     if (strcmp(command, "install") == 0) {
         if (!packageName) {
             std::cerr << "Error: Package name not specified for install command.\n" << usage;
             return 1;
         }
 
-        std::string installCommand = "source ";
-        installCommand += venvPath;
-        installCommand += "/bin/activate && pip install";
+        std::string installCommand = "";
+        if (venvPath) {
+            installCommand += venvPath;
+            installCommand += "/scripts/activate && ";
+        }
+        installCommand += "pip install";
+
 
         if (resolveConflicts) {
             installCommand += " --use-feature=fast-deps";
@@ -89,9 +88,12 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        std::string uninstallCommand = "source ";
-        uninstallCommand += venvPath;
-        uninstallCommand += "/bin/activate && pip uninstall -y ";
+        std::string uninstallCommand = "";
+        if (venvPath) {
+            uninstallCommand += venvPath;
+            uninstallCommand += "/scripts/activate && ";
+        }
+        uninstallCommand += "pip uninstall -y ";
         uninstallCommand += packageName;
 
         int result = std::system(uninstallCommand.c_str());
@@ -105,9 +107,9 @@ int main(int argc, char* argv[]) {
     }
     else if (strcmp(command, "list") == 0) {
         if (venvPath) {
-            std::string listCommand = "source ";
+            std::string listCommand = "";
             listCommand += venvPath;
-            listCommand += "/bin/activate && pip list";
+            listCommand += "/scripts/activate && pip list";
             std::system(listCommand.c_str());
         }
         else {
