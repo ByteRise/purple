@@ -1,94 +1,81 @@
-# Package Manager README
+# Python Package Manager (PyPM) Utility
 
-This is a simple command-line package manager written in C++ to facilitate the installation, uninstallation, and listing of Python packages within a virtual environment. It also provides an option to resolve dependencies using the `--resolve` flag during installation.
+This is a simple command-line utility for managing Python packages, providing a convenient interface for common tasks such as installing, uninstalling, and listing packages. The utility also includes additional features like specifying a virtual environment, resolving conflicts during installation, and installing Python itself.
 
 ## Usage
 
-```
-Usage: main.exe (--command <command>) [--virtualenv <virtual_env_path>] [options]
+```plaintext
+main.exe (--command <command>) [--virtualenv <virtual_env_path>] [options]
 
 Commands:
   install [--package <package_name>] [--version <version>] [--resolve]
   uninstall [--package <package_name>]
   list
+  python [--version <python_version>] [--silentinstall]
 ```
 
-## Commands
+### Commands
 
-### 1. Install
+- **install**: Installs a Python package. You can specify the package name, version, and whether to resolve conflicts during installation.
 
-Installs a Python package within the specified virtual environment.
+  Example:
+  ```bash
+  main.exe --command install --package requests --version 2.26.0 --resolve
+  ```
 
-```
-main.exe --command install --package <package_name> [--version <version>] [--resolve] --virtualenv <virtual_env_path>
-```
+- **uninstall**: Uninstalls a Python package. Specify the package name to remove.
 
-- `--package <package_name>`: Specifies the name of the package to be installed.
-- `--version <version>`: Optionally specifies the version of the package. If not provided, the latest version will be installed.
-- `--resolve`: Optionally resolves dependencies using the `--use-feature=fast-deps` flag during installation.
-- `--virtualenv <virtual_env_path>`: Specifies the path to the virtual environment where the package will be installed.
+  Example:
+  ```bash
+  main.exe --command uninstall --package requests
+  ```
 
-### 2. Uninstall
+- **list**: Lists installed Python packages.
 
-Uninstalls a previously installed Python package from the specified virtual environment.
+  Example:
+  ```bash
+  main.exe --command list
+  ```
 
-```
-main.exe --command uninstall --package <package_name> --virtualenv <virtual_env_path>
-```
+- **python**: Downloads and installs a specific version of Python. You can also perform a silent installation.
 
-- `--package <package_name>`: Specifies the name of the package to be uninstalled.
-- `--virtualenv <virtual_env_path>`: Specifies the path to the virtual environment from which the package will be uninstalled.
+  Example:
+  ```bash
+  main.exe --command python --version 3.9.7 --silentinstall
+  ```
 
-### 3. List
+### Options
 
-Lists all installed Python packages within the specified virtual environment.
+- **--virtualenv**: Specifies the path to a virtual environment.
 
-```
-main.exe --command list [--virtualenv <virtual_env_path>]
-```
+- **--package**: Specifies the name of the Python package.
 
-- `--virtualenv <virtual_env_path>`: Optionally specifies the path to the virtual environment. If not provided, the global environment's packages will be listed.
+- **--version**: Specifies the version of the Python package or Python itself.
+
+- **--resolve**: Resolves conflicts during package installation.
+
+- **(any symbol on 5th argument, for example, i chose --silentinstall)**: Performs a silent installation of Python.
 
 ## Examples
 
-### Install a package:
+1. Install a package with version and resolve conflicts:
+   ```bash
+   main.exe --command install --package numpy --version 1.21.2 --resolve
+   ```
 
-```
-main.exe --command install --package requests --virtualenv path/to/venv
-```
+2. Uninstall a package:
+   ```bash
+   main.exe --command uninstall --package numpy
+   ```
 
-### Install a specific version of a package:
+3. List installed packages:
+   ```bash
+   main.exe --command list
+   ```
 
-```
-main.exe --command install --package numpy --version 1.19.4 --virtualenv path/to/venv
-```
+4. Install a specific version of Python with silent installation:
+   ```bash
+   main.exe --command python --version 3.8.12 --silentinstall
+   ```
 
-### Install a package with dependency resolution:
-
-```
-main.exe --command install --package pandas --resolve --virtualenv path/to/venv
-```
-
-### Uninstall a package:
-
-```
-main.exe --command uninstall --package requests --virtualenv path/to/venv
-```
-
-### List installed packages:
-
-```
-main.exe --command list --virtualenv path/to/venv
-```
-
-### List global installed packages:
-
-```
-main.exe --command list
-```
-
-## Notes
-
-- Make sure to activate the virtual environment before running commands related to a specific environment.
-- If package installation fails, the tool will attempt to install the package from GitHub as a fallback.
-- For the `list` command, if no virtual environment is specified, it will list packages in the global environment.
+Feel free to explore the various commands and options to efficiently manage your Python environment.

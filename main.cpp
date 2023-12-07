@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 
 int main(int argc, char* argv[]) {
     const char* usage = "Usage: main.exe (--command <command>) [--virtualenv <virtual_env_path>] [options]\n"
@@ -14,6 +15,8 @@ int main(int argc, char* argv[]) {
     const char* packageName = nullptr;
     const char* version = nullptr;
     bool resolveConflicts = false;
+    const char* pythonVersion = nullptr;
+
 
     // Process command line arguments
     for (int i = 1; i < argc; ++i) {
@@ -105,6 +108,45 @@ int main(int argc, char* argv[]) {
             std::cout << "Package uninstallation failed." << std::endl;
         }
     }
+
+
+    else if (strcmp(command, "python") == 0) {
+        const char* version = argv[3];
+        const char* silentinstall = argv[4];
+        if (!version) {
+            std::cerr << "Error: Python version not specified.\n";
+            return 1;
+        }
+
+        std::string pythonVersion = version;
+        std::string downloadUrl = "https://www.python.org/ftp/python/" + pythonVersion + "/python-" + pythonVersion + ".exe";
+
+        std::string command = "powershell -c \"(New-Object System.Net.WebClient).DownloadFile('" + downloadUrl + "', 'python-" + pythonVersion + ".exe')\"";
+        
+        int result = std::system(command.c_str());
+
+        if (result == 0) {
+            std::cout << "Python exe file downloaded successfully!" << std::endl;
+			if (silentinstall) {
+				command = "python-" + pythonVersion + ".exe /quiet InstallAllUsers=0 Include_launcher=0 Shortcuts=0";
+				result = std::system(command.c_str());
+				if (result == 0) {
+					std::cout << "Python installation successful!" << std::endl;
+				}
+				else {
+					std::cout << "Python installation failed." << std::endl;
+				}
+			}
+        }
+        else {
+            std::cout << "Python exe file download failed." << std::endl;
+        }
+
+
+    }
+
+
+
     else if (strcmp(command, "list") == 0) {
         if (venvPath) {
             std::string listCommand = "";
