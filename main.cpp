@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         }
         else {
             std::cout << "Package installation failed. Trying to install from GitHub..." << std::endl;
-            installCommand = "source " + std::string(venvPath) + "/bin/activate && pip install git+https://github.com/ByteRise/purple-packages@" + packageName;
+            installCommand = std::string(venvPath) + "/bin/activate && pip install git+https://github.com/ByteRise/purple-packages@" + packageName;
             result = std::system(installCommand.c_str());
             if (result == 0) {
                 std::cout << "Package installation from GitHub successful!" << std::endl;
