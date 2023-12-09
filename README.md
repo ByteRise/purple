@@ -75,7 +75,7 @@ Commands:
 
 4. Install a specific version of Python with silent installation:
    ```bash
-   main.exe --command python --version 3.8.12 --silentinstall
+   main.exe --command python 3.8.12 --silentinstall
    ```
 
 Feel free to explore the various commands and options to efficiently manage your Python environment.
