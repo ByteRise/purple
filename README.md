@@ -106,3 +106,6 @@ Options:
 - It can handle package installations, uninstallations, generating requirements, and listing packages.
 - The `gen-reqs` command generates a `requirements.txt` file based on Python source code in the specified directory.
 - It provides options for specifying virtual environment path, package name, package version, and conflict resolution during installation.
+
+- VERY IMPORTANT NOTE!!!
+- I began to change frequently readme.md so if you didn't find what you were looking for in the latest version of this readme, just go to the commits and look for past updates, there will definitely be instructions for certain commands and examples of their uses
