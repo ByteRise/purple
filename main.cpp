@@ -2,13 +2,29 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <filesystem>
+#include <regex>
+#include <set>
+#include <fstream>
+
+
 
 int main(int argc, char* argv[]) {
     const char* usage = "Usage: main.exe (--command <command>) [--virtualenv <virtual_env_path>] [options]\n"
         "Commands:\n"
         "  install [--package <package_name>] [--version <version>] [--resolve]\n"
         "  uninstall [--package <package_name>]\n"
-        "  list\n";
+		"  gen-reqs [path to .py file]\n"
+        "  list\n"
+		"Options:\n"
+		"  --virtualenv <virtual_env_path>   Path to the virtual environment.\n"
+		"  --package <package_name>          Name of the package.\n"
+		"  --version <version>                Version of the package.\n"
+		"  --resolve                          Resolve conflicts.\n";
+	if (argc < 2) {
+		std::cerr << usage;
+		return 1;
+	}
 
     const char* command = nullptr;
     const char* venvPath = nullptr;
@@ -75,7 +91,7 @@ int main(int argc, char* argv[]) {
         }
         else {
             std::cout << "Package installation failed. Trying to install from GitHub..." << std::endl;
-            installCommand = std::string(venvPath) + "/bin/activate && pip install git+https://github.com/ByteRise/purple-packages@" + packageName;
+            installCommand = "source " + std::string(venvPath) + "/bin/activate && pip install git+https://github.com/ByteRise/purple-packages@" + packageName;
             result = std::system(installCommand.c_str());
             if (result == 0) {
                 std::cout << "Package installation from GitHub successful!" << std::endl;
@@ -145,7 +161,44 @@ int main(int argc, char* argv[]) {
 
     }
 
+    else if (strcmp(command, "gen-reqs") == 0) {
+        if (argc < 4) {
+            std::cerr << "Error: Path to the source code directory not provided.\n";
+            return 1;
+        }
 
+        const char* srcDirectory = argv[3];
+        std::filesystem::path srcPath(srcDirectory);
+        if (!std::filesystem::exists(srcPath) || !std::filesystem::is_directory(srcPath)) {
+            std::cerr << "Error: The provided path is not a valid directory.\n";
+            return 1;
+        }
+
+        std::regex importRegex("import (.*?)$");
+        std::set<std::string> dependencies;
+        for (const auto& entry : std::filesystem::recursive_directory_iterator(srcPath)) {
+            if (entry.path().extension() == ".py" || entry.path().extension() == ".pyw") {
+                std::ifstream file(entry.path());
+                std::string line;
+                while (std::getline(file, line)) {
+                    std::smatch matches;
+                    if (std::regex_search(line, matches, importRegex)) {
+                        for (size_t i = 1; i < matches.size(); ++i) {
+                            dependencies.insert(matches[i].str());
+                        }
+                    }
+                }
+            }
+        }
+
+        std::ofstream reqFile("requirements.txt");
+        for (const auto& dep : dependencies) {
+            reqFile << dep << std::endl;
+        }
+        reqFile.close();
+
+        std::cout << "requirements.txt has been generated successfully.\n";
+    }
 
     else if (strcmp(command, "list") == 0) {
         if (venvPath) {

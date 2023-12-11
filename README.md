@@ -1,81 +1,108 @@
-# Python Package Manager (PyPM) Utility
+# Package Manager Utility
 
-This is a simple command-line utility for managing Python packages, providing a convenient interface for common tasks such as installing, uninstalling, and listing packages. The utility also includes additional features like specifying a virtual environment, resolving conflicts during installation, and installing Python itself.
+This C++ program is a simple package manager utility designed to manage Python packages within a virtual environment. It supports various commands and options to perform tasks like installing, uninstalling, generating requirements, and listing installed packages.
 
 ## Usage
 
-```plaintext
-main.exe (--command <command>) [--virtualenv <virtual_env_path>] [options]
-
+```
+Usage: main.exe (--command <command>) [--virtualenv <virtual_env_path>] [options]
 Commands:
   install [--package <package_name>] [--version <version>] [--resolve]
   uninstall [--package <package_name>]
+  gen-reqs [path to file]
   list
-  python [--version <python_version>] [--silentinstall]
+Options:
+  --virtualenv <virtual_env_path>   Path to the virtual environment.
+  --package <package_name>          Name of the package.
+  --version <version>               Version of the package.
+  --resolve                         Resolve conflicts.
 ```
 
-### Commands
+## Commands and Options
 
-- **install**: Installs a Python package. You can specify the package name, version, and whether to resolve conflicts during installation.
+- **install**: Installs a Python package. Supports specifying package name, version, and resolving conflicts.
 
   Example:
-  ```bash
+  ```
   main.exe --command install --package requests --version 2.26.0 --resolve
   ```
 
-- **uninstall**: Uninstalls a Python package. Specify the package name to remove.
+- **uninstall**: Uninstalls a Python package. Requires specifying the package name.
 
   Example:
-  ```bash
+  ```
   main.exe --command uninstall --package requests
   ```
 
-- **list**: Lists installed Python packages.
+- **gen-reqs**: Generates a `requirements.txt` file based on the Python source code in the specified directory.
 
   Example:
-  ```bash
+  ```
+  main.exe --command gen-reqs [path to .py file]
+  ```
+
+- **list**: Lists installed Python packages in the virtual environment.
+
+  Example:
+  ```
   main.exe --command list
   ```
 
-- **python**: Downloads and installs a specific version of Python. You can also perform a silent installation.
+## Options
+
+- **--virtualenv**: Specifies the path to the virtual environment.
 
   Example:
-  ```bash
-  main.exe --command python --version 3.9.7 --silentinstall
   ```
-
-### Options
-
-- **--virtualenv**: Specifies the path to a virtual environment.
+  main.exe --command install --package requests --virtualenv /path/to/virtualenv
+  ```
 
 - **--package**: Specifies the name of the Python package.
 
-- **--version**: Specifies the version of the Python package or Python itself.
+  Example:
+  ```
+  main.exe --command install --package requests
+  ```
 
-- **--resolve**: Resolves conflicts during package installation.
+- **--version**: Specifies the version of the Python package.
 
-- **(any symbol on 5th argument, for example, i chose --silentinstall)**: Performs a silent installation of Python.
+  Example:
+  ```
+  main.exe --command install --package requests --version 2.26.0
+  ```
 
-## Examples
+- **--resolve**: Resolves package installation conflicts.
 
-1. Install a package with version and resolve conflicts:
-   ```bash
-   main.exe --command install --package numpy --version 1.21.2 --resolve
+  Example:
+  ```
+  main.exe --command install --package requests --resolve
+  ```
+
+## Example Usages
+
+1. **Install a package**:
+   ```
+   main.exe --command install --package requests
    ```
 
-2. Uninstall a package:
-   ```bash
-   main.exe --command uninstall --package numpy
+2. **Uninstall a package**:
+   ```
+   main.exe --command uninstall --package requests
    ```
 
-3. List installed packages:
-   ```bash
+3. **Generate requirements file**:
+   ```
+   main.exe --command gen-reqs /path/to/source/code
+   ```
+
+4. **List installed packages**:
+   ```
    main.exe --command list
    ```
 
-4. Install a specific version of Python with silent installation:
-   ```bash
-   main.exe --command python --version 3.8.12 --silentinstall
-   ```
+## Notes
 
-Feel free to explore the various commands and options to efficiently manage your Python environment.
+- This utility assumes a virtual environment for managing Python packages.
+- It can handle package installations, uninstallations, generating requirements, and listing packages.
+- The `gen-reqs` command generates a `requirements.txt` file based on Python source code in the specified directory.
+- It provides options for specifying virtual environment path, package name, package version, and conflict resolution during installation.
